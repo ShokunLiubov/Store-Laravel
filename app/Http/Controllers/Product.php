@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class Auth extends Controller
+class Product extends Controller
 {
     public function index()
     {
+        $products = [];
+
+        view('product.main', compact('products'));
     }
 
     public function create()

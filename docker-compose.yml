@@ -32,12 +32,12 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD:
             MYSQL_DATABASE: makeUpStore
-            MYSQL_USER: root
-            MYSQL_PASSWORD:
+            MYSQL_USER: user
+            MYSQL_PASSWORD: user_password
         volumes:
             - mariadb_data:/var/lib/mysql
         ports:
-            - "3307:3306"
+            - "3306"
         networks:
             - sail
     phpmyadmin:

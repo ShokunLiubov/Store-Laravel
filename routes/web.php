@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth;
+use App\Http\Controllers\Product;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,5 +20,9 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
-Route::get('/', [Auth::class, 'index']);
+Route::get('/', function (){
+    dd(DB::table('orders')->get());
+});
 
+Route::get('/products/{id}', [ Product::class, 'show'])->name('products.show');
+///в blade route('products.show', [$product->id]) - именнованные пути
