@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\User\Role;
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\Product;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/', function (){
+    dd(Role::array());
+
     dd(DB::table('orders')->get());
 });
 
