@@ -2,6 +2,7 @@
 
 use App\Enum\User\Role;
 use App\Http\Controllers\Auth;
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Product;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -21,10 +22,20 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
-Route::get('/', function (){
-    dd(Role::array());
+//Route::get('/', function ()
+//{
+//    dd(Role::array());
+//});
 
-    dd(DB::table('orders')->get());
+Route::prefix('make-up')->middleware('publicMenu')->group(function () {
+    Route::get('', [IndexController::class, 'index']);
+});
+
+Route::prefix('make-up-admin')->group(function () {
+
+    Route::get('/users', function () {
+        dd(33);
+    });
 });
 
 Route::get('/products/{id}', [ Product::class, 'show'])->name('products.show');
