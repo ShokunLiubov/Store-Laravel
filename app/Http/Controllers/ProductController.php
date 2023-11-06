@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
-class Product extends Controller
+class ProductController extends Controller
 {
-    public function index()
+    public function index(string $slug): View
     {
-        $products = [];
+        $product = Product::query()
+            ->where(['slug' => $slug])
+            ->firstOrFail();
 
-        view('product.main', compact('products'));
+        return view('page.public.product', compact('product'));
     }
 
     public function create()

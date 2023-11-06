@@ -10,7 +10,7 @@ class PublicMenu
 {
     public function handle(Request $request, Closure $next)
     {
-        view()->composer('layout.public', function ($view) {
+        view()->composer('Layout.Public', function ($view) {
             $view->with('menu', Category::query()->get());
         });
 
