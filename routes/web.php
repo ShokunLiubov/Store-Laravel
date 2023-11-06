@@ -2,6 +2,7 @@
 
 use App\Enum\User\Role;
 use App\Http\Controllers\Auth;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Product;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,8 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::prefix('make-up')->middleware('publicMenu')->group(function () {
-    Route::get('', [IndexController::class, 'index']);
+    Route::get('', [IndexController::class, 'index'])->name('index');
+    Route::get('/category/{category}', [CategoryController::class, 'index'])->name('category');
 });
 
 Route::prefix('make-up-admin')->group(function () {
