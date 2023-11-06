@@ -29,7 +29,7 @@
             <button>Call back</button>
         </div>
 
-        <a class='bottom_middle' href={{'gggg'}}>
+        <a class='bottom_middle' href={{ route('index') }}>
             <img src="{{ asset('img/logo.svg') }}"/>
         </a>
         <div class='bottom_right'>
@@ -83,7 +83,7 @@
         <ul>
             @foreach($menu as $item)
                 <li>
-                    <a href="make-up/category/{{ $item->slug}}">{{ $item->name }}</a>
+                    <a href="{{route('category', ['category' => $item->slug])}}">{{ $item->name }}</a>
                 </li>
             @endforeach
         </ul>
