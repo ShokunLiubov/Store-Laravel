@@ -21,4 +21,9 @@ class Category extends Model
     {
         return $this->belongsToMany(Product::class, 'product_categories');
     }
+
+    public function getNameAttribute($value): string
+    {
+        return (string)$value;
+    }
 }

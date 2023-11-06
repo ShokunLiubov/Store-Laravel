@@ -17,6 +17,6 @@ class IndexController extends Controller
     {
         $products = Product::query()->get();
 
-        return view('page.main', compact('products'));
+        return view('page.public.main', compact('products'));
     }
 }
