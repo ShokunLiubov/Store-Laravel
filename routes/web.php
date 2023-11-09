@@ -1,11 +1,11 @@
 <?php
 
-use App\Enum\User\Role;
-use App\Http\Controllers\Auth;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +23,20 @@ Route::prefix('make-up')->middleware('publicMenu')->group(function () {
     Route::get('', [IndexController::class, 'index'])->name('index');
     Route::get('/category/{category}', [CategoryController::class, 'index'])->name('category');
     Route::get('/product/{product}', [ProductController::class, 'index'])->name('product');
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])
+            ->name('logout');
+    });
+
+    Route::prefix('/auth')->middleware('guest')->group(function () {
+        Route::get('/{action}', [AuthController::class, 'auth'])
+            ->where('action', 'login|register')
+            ->name('auth');
+        Route::post('register', [RegisterController::class, 'store'])->name('register');
+        Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
+    });
+
 });
 
 Route::prefix('make-up-admin')->group(function () {

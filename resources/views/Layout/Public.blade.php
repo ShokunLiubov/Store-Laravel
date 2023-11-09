@@ -34,28 +34,28 @@
         </a>
         <div class='bottom_right'>
             <div class='user_auth'>
-                {% if not isAuth() %}
-                <a class="login" href={{'ffkfkf' }}>
-                    <span class='material-symbols-outlined'>person</span>
-                </a>
-                {% endif %}
+                @guest
+                    <a class="login" href={{ route('auth', ['action' => 'login']) }}>
+                        <span class='material-symbols-outlined'>person</span>
+                    </a>
+                @endguest
 
-                {{--isAuth %}--}}
                 <div class='auth_block'>
 
-                    {{--name : 'Guest' </div>--}}
-                    <a class='orders'>
+                    <div>{{ Auth::user()->name ?? 'Guest'}} </div>
+
+                    @auth
+                        <a class='orders'>
 						<span href={{ 'gggg' }} class="material-symbols-outlined">
 							list_alt
 						</span>
-                    </a>
+                        </a>
 
-                    <span class='logout'>
-									<span class='material-symbols-outlined'>logout</span>
-                        </span>
-
+                        <a class='logout' href="{{ route('logout') }}">
+                            <span class='material-symbols-outlined'>logout</span>
+                        </a>
+                    @endauth
                 </div>
-                {{--               --}}
             </div>
 
             <div class="cart-content">
