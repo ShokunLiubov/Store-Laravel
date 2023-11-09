@@ -256,8 +256,8 @@ h6 {
 }
 
 .carousel img {
-    width: 94.5vw;
-    margin-top: 40px;
+    width: 88.5vw;
+    /*margin-top: 40px;*/
     object-fit: cover;
 }
 
@@ -273,7 +273,7 @@ h6 {
 }
 
 .main_page {
-    margin-top: 50px;
+    margin-top: -15px;
     display: flex;
     justify-content: space-between;
 }
@@ -293,12 +293,6 @@ h6 {
     text-transform: uppercase;
     word-spacing: 20px;
     font-weight: 300 !important;
-}
-
-.carousel img {
-    width: 94.5vw;
-    margin-top: 40px;
-    object-fit: cover;
 }
 
 .block_sort {
