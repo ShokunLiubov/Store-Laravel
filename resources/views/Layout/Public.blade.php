@@ -60,6 +60,9 @@
 
             <div class="cart-content">
                 {{--cart modal--}}
+                @if($cartModal)
+                <x-cart.cart :cartProducts="$cartProducts" :cartModal="$cartModal" />
+                @endif
             </div>
 
             <div class='cart'>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProductController;
@@ -19,10 +20,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('make-up')->middleware('publicMenu')->group(function () {
+Route::prefix('make-up')->middleware('publicMenu')->group(callback: function () {
     Route::get('', [IndexController::class, 'index'])->name('index');
     Route::get('/category/{category}', [CategoryController::class, 'index'])->name('category');
     Route::get('/product/{product}', [ProductController::class, 'index'])->name('product');
+
+    Route::get('/cart', [CartController::class, 'show'])->name('cart');
 
     Route::middleware('auth')->group(function () {
         Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])
