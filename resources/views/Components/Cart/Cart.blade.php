@@ -1,5 +1,5 @@
 @props([
-    'cartModal'=> false,
+    'cartSum' => 0,
     'cartProducts' => [],
 ])
 
@@ -15,19 +15,14 @@
             </div>
             <div class='line'></div>
 
-            @if ($cartModal)
-            {<x-cart.item :cartProducts="$cartProducts" :cartModal="$cartModal"/>
-            @endif
+            <x-cart.item :cartProducts="$cartProducts" />
 
             <div>
-                @if ($cartProducts)
-                {% for error in errors %}
                 <div class="cart_error">{{ $error ?? ''}}</div>
-                @endif
             </div>
             <div class='total_price'>
                 <div>Total price:</div>
-                <div>{{ $cartSum ?? 0 }} $</div>
+                <div class="cart_sum"></div>
             </div>
 
             <div class='line'></div>

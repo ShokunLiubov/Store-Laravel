@@ -8,7 +8,11 @@ class CartService
 {
     public function getCart(): array
     {
-        return Session::get('cart') ?? [];
+        if (!session('cart')) {
+            session(['cart' => []]);
+        }
+
+        return session('cart');
     }
 
     public function calcCartSum(): int
@@ -19,5 +23,15 @@ class CartService
         }
 
         return $sum;
+    }
+
+    public function existProductInCart(int $id): bool
+    {
+        foreach ($this->getCart() as $product) {
+            if($product['id'] === $id) {
+                return true;
+            }
+        }
+        return false;
     }
 }

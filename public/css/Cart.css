@@ -145,3 +145,11 @@
     font-size: 15px;
     cursor: pointer;
 }
+
+.show {
+    display: block;
+}
+
+.hidden {
+    display: none;
+}
