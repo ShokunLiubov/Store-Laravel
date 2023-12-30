@@ -58,14 +58,14 @@
                 </div>
             </div>
 
-            <div class="cart-content">
-                {{--cart modal--}}
+            <div class="cart-content hidden" >
+                <x-cart.cart :cartProducts="$cartProducts ?? []" :cartSum="$cartSum ?? 0" />
             </div>
 
             <div class='cart'>
-						<span class="material-symbols-outlined">
-							shopping_bag
-						</span>
+				<span class="material-symbols-outlined">
+					shopping_bag
+				</span>
             </div>
 
             <form class='search' method="get" action={{''}}>
@@ -92,8 +92,14 @@
     <div class="container">
         @yield('content')
     </div>
-
 </div>
+<script>
+    window.Laravel = {
+        csrfToken: "{{ csrf_token() }}"
+    };
+</script>
+<script src="{{ asset('js/Service/CartService.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('js/Cart.js') }}?v={{ time() }}"></script>
 </body>
 </html>
 

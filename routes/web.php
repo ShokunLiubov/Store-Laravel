@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProductController;
@@ -19,10 +20,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('make-up')->middleware('publicMenu')->group(function () {
+Route::prefix('make-up')->middleware(['publicMenu'])->group(callback: function () {
     Route::get('', [IndexController::class, 'index'])->name('index');
     Route::get('/category/{category}', [CategoryController::class, 'index'])->name('category');
     Route::get('/product/{product}', [ProductController::class, 'index'])->name('product');
+
+    Route::prefix('/cart')->group(function () {
+        Route::post('/show', [CartController::class, 'show'])->name('cart.show');
+        Route::post('/hide', [CartController::class, 'hide'])->name('cart.hide');
+        Route::post('/add/{product}', [CartController::class, 'add'])->name('cart.add');
+        Route::post('/increment/{product}', [CartController::class, 'increment'])->name('cart.increment');
+        Route::post('/decrement/{product}', [CartController::class, 'decrement'])->name('cart.decrement');
+        Route::post('/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
+    });
 
     Route::middleware('auth')->group(function () {
         Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])
