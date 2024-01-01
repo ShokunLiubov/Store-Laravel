@@ -36,20 +36,6 @@ Route::prefix('make-up')->middleware(['publicMenu'])->group(callback: function (
         Route::post('/decrement/{product}', [CartController::class, 'decrement'])->name('cart.decrement');
         Route::post('/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
     });
-
-//    Route::middleware('auth')->group(function () {
-//        Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])
-//            ->name('logout');
-//    });
-//
-//    Route::prefix('/auth')->middleware('guest')->group(function () {
-//        Route::get('/{action}', [AuthController::class, 'auth'])
-//            ->where('action', 'login|register')
-//            ->name('auth');
-//        Route::post('register', [RegisterController::class, 'store'])->name('register');
-//        Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
-//    });
-
 });
 
 Route::prefix('make-up-admin')->group(function () {
