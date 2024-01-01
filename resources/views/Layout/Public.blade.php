@@ -35,7 +35,7 @@
         <div class='bottom_right'>
             <div class='user_auth'>
                 @guest
-                    <a class="login" href={{ route('auth', ['action' => 'login']) }}>
+                    <a class="login" href={{ route('login') }}>
                         <span class='material-symbols-outlined'>person</span>
                     </a>
                 @endguest
@@ -51,15 +51,20 @@
 						</span>
                         </a>
 
-                        <a class='logout' href="{{ route('logout') }}">
+                        <a href="#" class="logout"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <span class='material-symbols-outlined'>logout</span>
                         </a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
                     @endauth
                 </div>
             </div>
 
-            <div class="cart-content hidden" >
-                <x-cart.cart :cartProducts="$cartProducts ?? []" :cartSum="$cartSum ?? 0" />
+            <div class="cart-content hidden">
+                <x-cart.cart :cartProducts="$cartProducts ?? []" :cartSum="$cartSum ?? 0"/>
             </div>
 
             <div class='cart'>
