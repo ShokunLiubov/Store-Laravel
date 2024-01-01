@@ -22,7 +22,7 @@
             </a>
 
             @guest
-                <a href="{{ route('auth', ['action' => 'register']) }}" class={{$action == 'register' ? 'active' : ''}}>
+                <a href="{{ route('register') }}" class={{ $action == 'register' ? 'active' : '' }}>
 							<span class="material-symbols-outlined">
 								app_registration
 							</span>
@@ -31,7 +31,7 @@
             @endguest
 
             @guest
-                <a href="{{ route('auth', ['action' => 'login']) }}" class={{$action == 'login' ? 'active' : ''}}>
+                <a href="{{ route('login') }}" class={{ $action == 'login' ? 'active' : '' }}>
 							<span class='material-symbols-outlined'>
 								how_to_reg
 							</span>

@@ -4,7 +4,7 @@ namespace App\Service;
 
 use Illuminate\Support\Facades\Session;
 
-class CartService
+class CartService extends Service
 {
     public function getCart(): array
     {

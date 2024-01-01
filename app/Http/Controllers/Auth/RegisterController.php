@@ -2,41 +2,79 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Dto\Auth\RegisterDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Role;
-use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Service\AuthService;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Illuminate\View\View;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class RegisterController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Register Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller handles the registration of new users as well as their
+    | validation and creation. By default this controller uses a trait to
+    | provide this functionality without requiring any additional code.
+    |
+    */
+
+    use RegistersUsers;
 
     /**
-     * Handle an incoming registration request.
+     * Where to redirect users after register.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @var string
      */
-    public function store(RegisterRequest $request): RedirectResponse
+    protected string $redirectTo = RouteServiceProvider::HOME;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(protected AuthService $authService )
     {
-        $user = User::create([
+        $this->middleware('guest');
+    }
+
+    /**
+     * @throws UnknownProperties
+     */
+    public function register(RegisterRequest $request): RedirectResponse
+    {
+        $roleId = Role::query()
+            ->where('role', \App\Enum\User\Role::USER)
+            ->firstOrFail()
+            ->id;
+
+        $userDto = new RegisterDto([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => Role::query()->where('role', \App\Enum\User\Role::USER)->firstOrFail()->id
+            'password' => $request->password,
+            'roleId' => $roleId
         ]);
 
+        $user = $this->authService->create($userDto);
         event(new Registered($user));
+        Auth::login($user);
 
-        Auth::login($user, true);
+        return redirect($this->redirectTo);
+    }
 
-        return redirect(RouteServiceProvider::HOME);
+    public function showRegistrationForm(): View
+    {
+        $action = 'register';
+
+        return view('page.public.auth', compact('action'));
     }
 }
-
