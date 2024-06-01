@@ -22,35 +22,11 @@ services:
         networks:
             - sail
         depends_on:
-            - mariadb
+            - mysql
             - redis
             - meilisearch
             - mailpit
             - selenium
-    mariadb:
-        image: mariadb:latest
-        environment:
-            MYSQL_ROOT_PASSWORD:
-            MYSQL_DATABASE: makeUpStore
-            MYSQL_USER: user
-            MYSQL_PASSWORD: user_password
-        volumes:
-            - mariadb_data:/var/lib/mysql
-        ports:
-            - "3306"
-        networks:
-            - sail
-    phpmyadmin:
-        image: phpmyadmin:latest
-        environment:
-            PMA_HOST: mariadb
-            PMA_PORT: 3306
-            PMA_USER: user
-            PMA_PASSWORD: user_password
-        ports:
-            - "8080:80"
-        networks:
-            - sail
     redis:
         image: 'redis:alpine'
         ports:
@@ -100,6 +76,30 @@ services:
             - '/dev/shm:/dev/shm'
         networks:
             - sail
+    mysql:
+        image: 'mysql/mysql-server:8.0'
+        ports:
+            - '${FORWARD_DB_PORT:-3306}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        volumes:
+            - 'sail-mysql:/var/lib/mysql'
+            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - mysqladmin
+                - ping
+                - '-p${DB_PASSWORD}'
+            retries: 3
+            timeout: 5s
 networks:
     sail:
         driver: bridge
@@ -109,6 +109,4 @@ volumes:
     sail-redis:
         driver: local
     sail-meilisearch:
-        driver: local
-    mariadb_data:
         driver: local
