@@ -5,13 +5,15 @@ cartIcon.addEventListener('click', async () => {
     await CartService.showCart()
 })
 
-function updateCart(cart, cartSum) {
+function updateCart(cart = [], cartSum = 0, error = null) {
     document.querySelector('.cart_sum').innerHTML = cartSum + '$';
     const container = document.querySelector('.product_items');
     let itemsHTML;
     container.innerHTML = '';
+    console.log(error)
     if (cart) {
         itemsHTML = cart.map(item => {
+            console.log(error)
             return `<div>
                 <div class='item'>
                     <a href="/make-up/product/{{ $product->id }}" class='productImg'>
@@ -23,11 +25,9 @@ function updateCart(cart, cartSum) {
                             <a href="/make-up/product/{{ $product->id }}">
                                 <p class='title'>${item.title}</p>
                             </a>
-
                             <p class='classification'>
                                 helllo
                             </p>
-
                             <div class='counter'>
                                 <div class='decrement'>
                             <span class='material-symbols-outlined' product-id=${item.id}>
@@ -50,9 +50,13 @@ function updateCart(cart, cartSum) {
                                 </div>
                             </div>
                         </div>
-                        <p class='product_price'>${item.price}$</p>
+                        <div class='product_price'>
+                            ${error && error.product_id === item.id ? `<p class='error'>${error.message}</p>` : ''}
+                            <p class='product_price'>${item.price}$</p>
+                        </div>
                     </div>
                 </div>
+
                 <div class='line'></div>
             </div>`
         }).join('');
@@ -116,5 +120,7 @@ function cartAttachEventHandlers() {
             await CartService.remove(productId)
         });
     })
+
+
 
 }

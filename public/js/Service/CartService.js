@@ -72,8 +72,9 @@ class CartService {
                 },
             });
 
-            const { cart, cartSum } =  await response.json();
-            updateCart(cart, cartSum)
+            const { cart, cartSum, error } =  await response.json();
+
+            updateCart(cart, cartSum, error)
             cartAttachEventHandlers();
         } catch (error) {
             console.error('An error occurred:', error);

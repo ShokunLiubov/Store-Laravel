@@ -2,8 +2,6 @@
 
 namespace App\Service;
 
-use Illuminate\Support\Facades\Session;
-
 class CartService extends Service
 {
     public function getCart(): array
@@ -23,15 +21,5 @@ class CartService extends Service
         }
 
         return $sum;
-    }
-
-    public function existProductInCart(int $id): bool
-    {
-        foreach ($this->getCart() as $product) {
-            if($product['id'] === $id) {
-                return true;
-            }
-        }
-        return false;
     }
 }

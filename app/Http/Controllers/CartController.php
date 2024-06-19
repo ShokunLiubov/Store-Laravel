@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Service\CartService;
-use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class CartController extends Controller
 {
@@ -17,10 +14,11 @@ class CartController extends Controller
 
     public function show(): JsonResponse
     {
-        $cart = $this->cartService->getCart();
-        $cartSum = $this->cartService->calcCartSum();
-
-        return response()->json(['cartModal' => true, 'cart' => $cart, 'cartSum' => $cartSum]);
+        return response()->json([
+            'cartModal' => true,
+            'cart' => $this->cartService->getCart(),
+            'cartSum' => $this->cartService->calcCartSum()
+        ]);
     }
 
     public function hide(): JsonResponse
@@ -31,7 +29,7 @@ class CartController extends Controller
     public function add(Product $product): JsonResponse
     {
         $cart = $this->cartService->getCart();
-        $exist = $this->cartService->existProductInCart($product['id']);
+        $exist = in_array($product['id'], array_column($cart, 'id'));
 
         if ($exist) {
             $this->increment($product);
@@ -41,31 +39,28 @@ class CartController extends Controller
         }
 
         session(['cart' => $cart]);
+
         return response()->json();
     }
 
-    /**
-     * @throws Exception
-     */
     public function increment(Product $product): JsonResponse
     {
         $cart = $this->cartService->getCart();
+        $error = null;
 
-        foreach ($cart as $item) {
-
+        foreach ($cart as &$item) {
             if ($item['id'] === $product['id']) {
-
                 if ($item['quantity'] > $item['count']) {
                     $item['count'] += 1;
                     session(['cart' => $cart]);
-                    $cartSum = $this->cartService->calcCartSum();
-                    return response()->json(['cart' => $cart, 'cartSum' => $cartSum]);
                 } else {
-                    throw new Exception('All in stock ' . $product['count']);
+                    $error = ['message' => 'No more products in stock!', 'product_id' => $product['id']];
                 }
+                break;
             }
         }
-        return response()->json(['cart' => $cart]);
+
+        return response()->json(['cart' => $cart, 'cartSum' => $this->cartService->calcCartSum(), 'error' => $error]);
     }
 
     public function decrement(Product $product): JsonResponse
@@ -74,32 +69,33 @@ class CartController extends Controller
 
         foreach ($cart as $item) {
             if ($item['id'] === $product['id']) {
-                if ($item['count'] != 1) {
-                    $item['count'] -= 1;
-                    session(['cart' => $cart]);
-                    $cartSum = $this->cartService->calcCartSum();
-                    return response()->json(['cart' => $cart, 'cartSum' => $cartSum]);
+                if ($item['count'] === 1) {
+
+                    return $this->remove($product);
                 }
 
-                $this->remove($product);
+                $item['count'] -= 1;
             }
         }
-        return response()->json(['cart' => $cart]);
+
+        session(['cart' => $cart]);
+
+        return response()->json(['cart' => $cart, 'cartSum' => $this->cartService->calcCartSum()]);
     }
 
     public function remove(Product $product): JsonResponse
     {
-        $cart = $this->cartService->getCart();
+        $cart = collect($this->cartService->getCart());
 
-        foreach ($cart as $key => $value) {
+        $cart = $cart->reject(function ($item) use ($product) {
+            return $item['id'] === $product['id'];
+        });
 
-            if ($value['id'] == $product['id']) {
-                    array_splice($cart, $key, 1);
-                    session(['cart' => $cart]);
-                    $cartSum = $this->cartService->calcCartSum();
-                    return response()->json(['cart' => $cart, 'cartSum' => $cartSum]);
-            }
-        }
-        return response()->json(['cart' => $cart]);
+        session(['cart' => $cart->toArray()]);
+
+        return response()->json([
+            'cart' => $cart->toArray(),
+            'cartSum' => $this->cartService->calcCartSum()
+        ]);
     }
 }
